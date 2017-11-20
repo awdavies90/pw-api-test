@@ -1,6 +1,0 @@
-{
-	"postId": {{postId}},
-	"userId": {{userId}},
-	"amount": {{amount}},
-	"notes": "{{notes}}"
-}

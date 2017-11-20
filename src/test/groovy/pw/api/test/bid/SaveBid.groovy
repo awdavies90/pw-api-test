@@ -24,31 +24,32 @@ class SaveBid extends BaseApiTest {
 			}
 	}
 	
-	def "Test Two"() {
+	def "Save Bid - Required Params"() {
 		
 		given:'There is a test'
 			def params = [
-				postId:1,
-				userId:8,
-				amount:413.10,
-				notes:'retj retjr tkjhret'
+				postId:postId,
+				userId:userId,
+				amount:amount,
+				notes:notes
 			]
 			def url = 'bid/save'
 					
 		when:'The test is executed'
-			def response = post(url, "SaveBid", params);
+			def response = post(url, "bid/SaveBid", params);
 		
 		then:'The test passes'
 			with(response) {
-				acceptReason == null
-				amount == params.amount
-				notes == params.notes
-				post.id == params.postId
-				status == 'PENDING'
-				user.id == params.userId
-				withdrawReason == null
+				errors[0] == 'The following params are required [postId, userId, amount, notes]'
 			}
 	        //"dateCreated": "2017-11-19T14:27:14Z",
 	        //"dateUpdated": "2017-11-19T14:27:14Z",
+		
+		where:
+			postId | userId | amount | notes 				  | description
+			null   | 5		| 120	 | 'These are some notes' | 'No postId'
+			1      | null	| 120	 | 'These are some notes' | 'No userId'
+			1      | 5		| null	 | 'These are some notes' | 'No amount'
+			1      | 5		| 500	 | null					  | 'No notes'
 	}
 }

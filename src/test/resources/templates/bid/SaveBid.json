@@ -1,0 +1,6 @@
+{
+	{{#if postId}}"postId": {{postId}},{{/if}}
+	{{#if userId}}"userId": {{userId}},{{/if}}
+	{{#if amount}}"amount": {{amount}}{{/if}}
+	{{#if notes}},"notes": "{{notes}}"{{/if}}
+}
