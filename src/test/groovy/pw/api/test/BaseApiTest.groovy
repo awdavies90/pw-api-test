@@ -14,7 +14,7 @@ class BaseApiTest extends Specification {
 	def printRequest = true
 	def printResponse = true
 	
-	def baseUrl = "http://localhost:8080/"
+	static baseUrl = "http://localhost:8080/"
 	def requestHeaders = [Accept: 'application/json', 'Content-Type':'application/json']
 	
 	def post(String url, String templateName, Map params) {
