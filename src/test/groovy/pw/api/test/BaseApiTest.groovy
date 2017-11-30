@@ -7,14 +7,18 @@ import javax.xml.ws.http.HTTPException
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import groovy.time.TimeCategory
 import pw.api.test.utils.Templater
 
 class BaseApiTest extends Specification {
 	
+	@Shared static validChars = ['£', '$', '!', '&', '()', '@', '?', ',', '.', '+', '=', '/', ':', '#']
+	@Shared static invalidChars = ['`', '^', '*', '_', '{', '}', '[', ']', '~', ';', '<', '>', '|']
+	def tenSecondsAgo = use(TimeCategory) { new Date() - 10.seconds }
 	def printRequest = true
 	def printResponse = true
 	
-	static baseUrl = "http://localhost:8080/"
+	static baseUrl = "http://localhost:8080/api/"
 	def requestHeaders = [Accept: 'application/json', 'Content-Type':'application/json']
 	
 	def post(String url, String templateName, Map params) {
@@ -45,7 +49,11 @@ class BaseApiTest extends Specification {
 			//Execute request and get response
 			def responseContent = (responseCode == 200) ? content?.text : errorStream?.text
 			if (responseContent) {
-				responseJson = new JsonSlurper().parseText(responseContent)
+				try {
+					responseJson = new JsonSlurper().parseText(responseContent)
+				} catch (JsonException) {
+					responseJson = responseContent
+				}
 				if (printResponse) {
 					println JsonOutput.prettyPrint(responseContent)
 				}

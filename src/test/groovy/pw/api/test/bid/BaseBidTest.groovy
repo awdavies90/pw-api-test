@@ -7,9 +7,10 @@ class BaseBidTest extends BaseApiTest {
 	
 	@Shared static savedBids = []
 	
-	def cleanupSpec() {
+	def cleanup() {
 		savedBids.each { bidId ->
 			deleteBid(bidId)
+			//assert getBid(bidId).text == '{"errors":["No bid found with this id"]}'
 		}
 	}
 	
@@ -20,6 +21,18 @@ class BaseBidTest extends BaseApiTest {
 		}
 		response
 	}
+	
+	def getBid(id) {
+		get("bid/$id")
+	}
+	
+	def acceptBid(id) {
+		get("bid/accept/$id")
+	}
+	
+//	def withdrawBid(id) {
+//		post("bid/withdraw/$id")
+//	}
 	
 	def deleteBid(bidId) {
 		delete("bid/delete/$bidId")
