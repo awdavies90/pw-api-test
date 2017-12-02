@@ -6,7 +6,6 @@ import pw.api.test.BaseApiTest
 @Unroll
 class SaveBid extends BaseBidTest {
 	
-	@IgnoreRest
 	def "Save Bid"() {
 		
 		given:'A bid containing valid data is to be saved'
@@ -21,9 +20,45 @@ class SaveBid extends BaseBidTest {
 			def saveResponse = saveBid(params)
 			def bidId = saveResponse.id
 			def getResponse = getBid(bidId)
+			def bidsForUserResponse = getBidsForUser(params.userId)
+			def bidsForUserPostsResponse = getBidsForUserPosts(1)
+			def bidsForPostResponse = getBidsForPost(params.postId)
 		
 		then:'It is correctly saved'
 			with(saveResponse) {
+				post.id == params.postId
+				user.id == params.userId
+				amount == params.amount
+				notes == params.notes
+				status == 'PENDING'
+				acceptReason == null
+				withdrawReason == null
+				dateCreated > tenSecondsAgo
+				dateUpdated > tenSecondsAgo
+			}
+			with(bidsForUserResponse[0]) {
+				post.id == params.postId
+				user.id == params.userId
+				amount == params.amount
+				notes == params.notes
+				status == 'PENDING'
+				acceptReason == null
+				withdrawReason == null
+				dateCreated > tenSecondsAgo
+				dateUpdated > tenSecondsAgo
+			}
+			with(bidsForUserPostsResponse[0]) {
+				post.id == params.postId
+				user.id == params.userId
+				amount == params.amount
+				notes == params.notes
+				status == 'PENDING'
+				acceptReason == null
+				withdrawReason == null
+				dateCreated > tenSecondsAgo
+				dateUpdated > tenSecondsAgo
+			}
+			with(bidsForPostResponse[0]) {
 				post.id == params.postId
 				user.id == params.userId
 				amount == params.amount

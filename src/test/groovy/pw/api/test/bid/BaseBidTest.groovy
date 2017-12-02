@@ -10,8 +10,8 @@ class BaseBidTest extends BaseApiTest {
 	def cleanup() {
 		savedBids.each { bidId ->
 			deleteBid(bidId)
-			//assert getBid(bidId).text == '{"errors":["No bid found with this id"]}'
 		}
+		savedBids = []
 	}
 	
 	def saveBid(Map params) {
@@ -26,13 +26,27 @@ class BaseBidTest extends BaseApiTest {
 		get("bid/$id")
 	}
 	
-	def acceptBid(id) {
-		get("bid/accept/$id")
+	def getBidsForPost(postId) {
+		get("bid/forPost/$postId")
 	}
 	
-//	def withdrawBid(id) {
-//		post("bid/withdraw/$id")
-//	}
+	def getBidsForUser(userId) {
+		get("bid/forUser/$userId")
+	}
+	
+	def getBidsForUserPosts(userId) {
+		get("bid/forUserPosts/$userId")
+	}
+	
+	def acceptBid(id) {
+		println "Performing put to bid/accept/$id"
+		put("bid/accept/$id")
+	}
+	
+	def withdrawBid(id) {
+		println "Performing put to bid/withdraw/$id"
+		put("bid/withdraw/$id")
+	}
 	
 	def deleteBid(bidId) {
 		delete("bid/delete/$bidId")

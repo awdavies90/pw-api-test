@@ -5,22 +5,8 @@ import pw.api.test.BaseApiTest
 
 @Unroll
 class SaveBidValidation extends BaseBidTest {
-	
-//	def "Test One"() {
-//		
-//		given:'There is a test'
-//			def url = 'bid/forPost?id=1'
-//					
-//		when:'The test is executed'
-//			def response = get(url)
-//		
-//		then:'The test passes'
-//			response.post.id.every {
-//				it == 1
-//			}
-//	}
-//	
-	def "Save Bid - Required Params Not Supplied"() {
+
+	def "Save Bid Validation - Required Params Not Supplied"() {
 		
 		given:'There is a test'
 			def params = [
@@ -35,8 +21,6 @@ class SaveBidValidation extends BaseBidTest {
 		
 		then:'The test passes'
 			response.errors[0] == 'The following params are required [postId, userId, amount, notes]'
-	        //"dateCreated": "2017-11-19T14:27:14Z",
-	        //"dateUpdated": "2017-11-19T14:27:14Z",
 		
 		where:
 			postId | userId | amount | notes 				  | description
@@ -46,7 +30,7 @@ class SaveBidValidation extends BaseBidTest {
 			1      | 5		| 500	 | null					  | 'No notes'
 	}
 	
-	def "Save Bid - Incorrect Post and User IDs"() {
+	def "Save Bid Validation - Incorrect Post and User IDs"() {
 		
 		given:'There is a test'
 			def params = [
@@ -68,7 +52,7 @@ class SaveBidValidation extends BaseBidTest {
 			1      | 999999	| 'user'  | "userId doesn't exist"
 	}
 	
-	def "Save Bid - Bid Can Only be Made By Band"() {
+	def "Save Bid Validation - Bid Can Only be Made By Band"() {
 		
 		given:'There is a test'
 			def params = [
@@ -85,7 +69,7 @@ class SaveBidValidation extends BaseBidTest {
 			response.errors[0] == 'A bid can only be made by a user of type Band.'
 	}
 	
-	def "Save Bid - User has Already Made a Bid for Post"() {
+	def "Save Bid Validation - User has Already Made a Bid for Post"() {
 		
 		given:'There is a test'
 			def params = [
@@ -103,7 +87,7 @@ class SaveBidValidation extends BaseBidTest {
 			response.errors[0] == 'A bid already exists for this user and post.'
 	}
 	
-	def "Save Bid - Another Bid Already Accepted"() {
+	def "Save Bid Validation - Another Bid Already Accepted"() {
 		
 		given:'There is a test'
 			def params = [
@@ -122,8 +106,7 @@ class SaveBidValidation extends BaseBidTest {
 			response.errors[0] == 'A bid for this post has already been accepted.'
 	}
 	
-	@IgnoreRest
-	def "Save Bid - Invalid Characters in Notes"() {
+	def "Save Bid Validation - Invalid Characters in Notes"() {
 		
 		given:'There is a test'
 			def params = [
