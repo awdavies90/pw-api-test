@@ -1,7 +1,6 @@
 package pw.api.test.bid
 
 import spock.lang.*
-import pw.api.test.BaseApiTest
 
 @Unroll
 class SaveBidValidation extends BaseBidTest {
@@ -17,7 +16,7 @@ class SaveBidValidation extends BaseBidTest {
 			]
 					
 		when:'The test is executed'
-			def response = saveBid(params)
+			def response = bidHelper.saveBid(params)
 		
 		then:'The test passes'
 			response.errors[0] == 'The following params are required [postId, userId, amount, notes]'
@@ -41,7 +40,7 @@ class SaveBidValidation extends BaseBidTest {
 			]
 					
 		when:'The test is executed'
-			def response = saveBid(params)
+			def response = bidHelper.saveBid(params)
 		
 		then:'The test passes'
 			response.errors[0] == "No $message was found with this ID."
@@ -63,7 +62,7 @@ class SaveBidValidation extends BaseBidTest {
 			]
 					
 		when:'The test is executed'
-			def response = saveBid(params)
+			def response = bidHelper.saveBid(params)
 		
 		then:'The test passes'
 			response.errors[0] == 'A bid can only be made by a user of type Band.'
@@ -80,8 +79,8 @@ class SaveBidValidation extends BaseBidTest {
 			]
 					
 		when:'The test is executed'
-			def validResponse = saveBid(params)
-			def response = saveBid(params)
+			def validResponse = bidHelper.saveBid(params)
+			def response = bidHelper.saveBid(params)
 		
 		then:'The test passes'
 			response.errors[0] == 'A bid already exists for this user and post.'
@@ -98,9 +97,9 @@ class SaveBidValidation extends BaseBidTest {
 			]
 					
 		when:'The test is executed'
-			def validResponse = saveBid(params)
-			acceptBid(validResponse?.id)
-			def response = saveBid(postId:1, userId:6, amount:500, notes:'These are some notes')
+			def validResponse = bidHelper.saveBid(params)
+			bidHelper.acceptBid(validResponse?.id)
+			def response = bidHelper.saveBid(postId:1, userId:6, amount:500, notes:'These are some notes')
 		
 		then:'The test passes'
 			response.errors[0] == 'A bid for this post has already been accepted.'
@@ -117,7 +116,7 @@ class SaveBidValidation extends BaseBidTest {
 			]
 					
 		when:'The test is executed'
-			def response = saveBid(params)
+			def response = bidHelper.saveBid(params)
 		
 		then:'The test passes'
 			response.errors[0] == 'Text cannot contain any of the following characters `^*_{}[]~|;<>'

@@ -1,7 +1,6 @@
 package pw.api.test.bid
 
 import spock.lang.*
-import pw.api.test.BaseApiTest
 
 @Unroll
 class SaveBid extends BaseBidTest {
@@ -17,12 +16,12 @@ class SaveBid extends BaseBidTest {
 			]
 					
 		when:'The bid is submitted'
-			def saveResponse = saveBid(params)
+			def saveResponse = bidHelper.saveBid(params)
 			def bidId = saveResponse.id
-			def getResponse = getBid(bidId)
-			def bidsForUserResponse = getBidsForUser(params.userId)
-			def bidsForUserPostsResponse = getBidsForUserPosts(1)
-			def bidsForPostResponse = getBidsForPost(params.postId)
+			def getResponse = bidHelper.getBid(bidId)
+			def bidsForUserResponse = bidHelper.getBidsForUser(params.userId)
+			def bidsForUserPostsResponse = bidHelper.getBidsForUserPosts(1)
+			def bidsForPostResponse = bidHelper.getBidsForPost(params.postId)
 		
 		then:'It is correctly saved'
 			with(saveResponse) {
@@ -83,7 +82,7 @@ class SaveBid extends BaseBidTest {
 			]
 					
 		when:'The bid is submitted'
-			def response = saveBid(params)
+			def response = bidHelper.saveBid(params)
 			"2017-11-19T14:27:14Z"
 		
 		then:'It is correctly saved'

@@ -1,7 +1,5 @@
 package pw.api.test.bid
 
-import pw.api.test.BaseApiTest
-
 class AcceptBidValidation extends BaseBidTest {
 	
 	def "1 - Accept Bid - Incorrect Bid Id"() {
@@ -10,7 +8,7 @@ class AcceptBidValidation extends BaseBidTest {
 			def bidId = "999999999999"
 					
 		when:'A bid with an invalid id is accepted'
-			def response = acceptBid(bidId)
+			def response = bidHelper.acceptBid(bidId)
 		
 		then:'An appropriate error response is received'
 			response.errors[0] == "No bid was found with this ID."
@@ -27,10 +25,10 @@ class AcceptBidValidation extends BaseBidTest {
 			]
 					
 		when:'The bid is accepted again'
-			def createBidResponse = saveBid(params)
+			def createBidResponse = bidHelper.saveBid(params)
 			def bidId = createBidResponse.id
-			def validAcceptBidResponse = acceptBid(bidId)
-			def invalidAcceptBidResponse = acceptBid(bidId)
+			def validAcceptBidResponse = bidHelper.acceptBid(bidId)
+			def invalidAcceptBidResponse = bidHelper.acceptBid(bidId)
 		
 		then:'An appropriate error response is received'
 			invalidAcceptBidResponse.errors[0] == 'The bid has already been accepted.'
@@ -47,10 +45,10 @@ class AcceptBidValidation extends BaseBidTest {
 			]
 					
 		when:'The bid is accepted'
-			def createBidResponse = saveBid(params)
+			def createBidResponse = bidHelper.saveBid(params)
 			def bidId = createBidResponse.id
-			def withdrawBidResponse = withdrawBid(bidId)
-			def invalidAcceptBidResponse = acceptBid(bidId)
+			def withdrawBidResponse = bidHelper.withdrawBid(bidId)
+			def invalidAcceptBidResponse = bidHelper.acceptBid(bidId)
 		
 		then:'An appropriate error response is received'
 			invalidAcceptBidResponse.errors[0] == 'The bid has already been withdrawn.'
@@ -73,12 +71,12 @@ class AcceptBidValidation extends BaseBidTest {
 			]
 					
 		when:'The bid is accepted'
-			def createValidBidResponse = saveBid(params)
+			def createValidBidResponse = bidHelper.saveBid(params)
 			def validBidId = createValidBidResponse.id
-			def createInvaildBidResponse = saveBid(params2)
+			def createInvaildBidResponse = bidHelper.saveBid(params2)
 			def invalidBidId = createInvaildBidResponse.id
-			def validAcceptBidResponse = acceptBid(validBidId)
-			def invalidAcceptBidResponse = acceptBid(invalidBidId)
+			def validAcceptBidResponse = bidHelper.acceptBid(validBidId)
+			def invalidAcceptBidResponse = bidHelper.acceptBid(invalidBidId)
 		
 		then:'An appropriate error response is received'
 			invalidAcceptBidResponse.errors[0] == 'Another bid for this post has already been accepted.'

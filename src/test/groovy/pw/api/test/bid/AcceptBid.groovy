@@ -1,8 +1,6 @@
 package pw.api.test.bid
 
-import pw.api.test.BaseApiTest
-
-class AcceptBid extends BaseApiTest {
+class AcceptBid extends BaseBidTest {
 	
 	def "Accept Bid"() {
 		

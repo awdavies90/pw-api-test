@@ -12,7 +12,7 @@ class BidHelper {
 	
 	@Shared static savedBids = []
 	
-	def cleanup() {
+	def deleteAllBids() {
 		savedBids.each { bidId ->
 			deleteBid(bidId)
 		}
