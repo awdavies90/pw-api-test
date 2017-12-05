@@ -47,13 +47,18 @@ class BidHelper {
 		baseTest.put("bid/accept/$id")
 	}
 	
-	def acceptBid(id, String withdrawReason) {
-		def requestContent = "{\"reason\":\"$withdrawReason\"}"
+	def acceptBid(id, String acceptReason) {
+		def requestContent = "{\"reason\":\"$acceptReason\"}"
 		baseTest.put("bid/accept/$id", requestContent)
 	}
 	
 	def withdrawBid(id) {
 		baseTest.put("bid/withdraw/$id")
+	}
+	
+	def withdrawBid(id, String withdrawReason) {
+		def requestContent = "{\"reason\":\"$withdrawReason\"}"
+		baseTest.put("bid/withdraw/$id", requestContent)
 	}
 	
 	def deleteBid(bidId) {
