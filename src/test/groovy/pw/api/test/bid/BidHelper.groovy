@@ -1,6 +1,9 @@
 package pw.api.test.bid
 
 import spock.lang.*
+
+import javax.activity.InvalidActivityException
+
 import pw.api.test.BaseApiTest
 
 class BidHelper {
@@ -12,19 +15,21 @@ class BidHelper {
 	
 	@Shared static savedBids = []
 	
-	def deleteAllBids() {
-		savedBids.each { bidId ->
-			deleteBid(bidId)
-		}
-		savedBids = []
-	}
-	
 	def saveBid(Map params) {
 		def response = baseTest.post('bid/save', "bid/SaveBid", params)
 		if (response?.id) {
 			savedBids << response.id
 		}
 		response
+	}
+	
+	def updateBid(Map params) {
+		if (params.id) {
+			println "Performing put to bid/update/$params.id"
+			baseTest.put("bid/update/$params.id", "bid/UpdateBid", params)
+		} else {
+			throw new Exception("No id was provided.")
+		}
 	}
 	
 	def getBid(id) {
@@ -59,6 +64,13 @@ class BidHelper {
 	def withdrawBid(id, String withdrawReason) {
 		def requestContent = "{\"reason\":\"$withdrawReason\"}"
 		baseTest.put("bid/withdraw/$id", requestContent)
+	}
+	
+	def deleteAllBids() {
+		savedBids.each { bidId ->
+			deleteBid(bidId)
+		}
+		savedBids = []
 	}
 	
 	def deleteBid(bidId) {

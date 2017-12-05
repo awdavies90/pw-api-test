@@ -1,0 +1,4 @@
+{
+	"amount": {{#if amount}}{{amount}}{{else}}null{{/if}},
+	"notes": {{#if notes}}"{{notes}}"{{else}}null{{/if}}
+}
