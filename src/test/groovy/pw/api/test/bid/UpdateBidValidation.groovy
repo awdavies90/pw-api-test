@@ -5,25 +5,25 @@ import spock.lang.*
 @Unroll
 class UpdateBidValidation extends BaseBidTest {
 
-	def "Save Bid Validation - Incorrect Bid ID"() {
+	def "Update Bid Validation - Incorrect Bid ID"() {
 		
-		given:'There is a test'
+		given:'A bid with an ID which does not exist is to be updated'
 			def params = [
 				id: 999999999,
 				amount:500,
 				notes:'These are some notes'
 			]
 					
-		when:'The test is executed'
+		when:'The bid is updated'
 			def response = bidHelper.updateBid(params)
 		
-		then:'The test passes'
+		then:'An appropriate error message is returned'
 			response.errors[0] == "No bid was found with this ID."
 	}
 	
-	def "Save Bid Validation - Either Amount or Notes Must be Supplied"() {
+	def "Update Bid Validation - Either Amount or Notes Must be Supplied"() {
 		
-		given:'There is a test'
+		given:'A bid is to be updated'
 			def saveParams = [
 				postId:1,
 				userId:5,
@@ -35,28 +35,16 @@ class UpdateBidValidation extends BaseBidTest {
 				id:bidId
 			]
 					
-		when:'The test is executed'
+		when:'The bid is updated but niether a amount or notes value is provided'
 			def response = bidHelper.updateBid(updateParams)
 		
-		then:'The test passes'
-			if (!valid) {
-				response.errors[0] == 'Either amount or notes must be supplied.'
-			} else {
-				response.amount == amount
-				response.notes = notes
-			}
-			
-		
-		where:
-			amount | notes 				    | valid | description
-			null   | 'These are some notes' | true	| 'No amount'
-			750	   | null					| true	| 'No notes'
-			null   | null					| false	| 'No amount or notes'
+		then:'An appropriate error message is returned'
+			response.errors[0] == 'Either amount or notes must be supplied.'
 	}
 	
-	def "Save Bid Validation - Invalid Characters in Notes"() {
+	def "Update Bid Validation - Invalid Characters in Notes"() {
 		
-		given:'There is a test'
+		given:'A bid is to be updated'
 			def saveParams = [
 				postId:1,
 				userId:5,
@@ -70,10 +58,10 @@ class UpdateBidValidation extends BaseBidTest {
 				notes:notes
 			]
 					
-		when:'The test is executed'
+		when:'The bid is updated with an invalid special character in the notes'
 			def response = bidHelper.updateBid(updateParams)
 		
-		then:'The test passes'
+		then:'An appropriate error message is returned'
 			response.errors[0] == 'Text cannot contain any of the following characters `^*_{}[]~|;<>'
 			
 		where:
