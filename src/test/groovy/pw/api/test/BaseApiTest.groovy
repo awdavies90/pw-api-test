@@ -5,10 +5,11 @@ import spock.lang.*
 
 import javax.xml.ws.http.HTTPException
 
+import api.test.helpers.BidHelper
+import api.test.helpers.EventHelper
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.time.TimeCategory
-import pw.api.test.bid.BidHelper
 import pw.api.test.utils.Templater
 
 class BaseApiTest extends Specification {
@@ -21,6 +22,7 @@ class BaseApiTest extends Specification {
 	
 	//Helpers
 	BidHelper bidHelper = new BidHelper(this)
+	EventHelper eventHelper = new EventHelper(this)
 	
 	static baseUrl = "http://localhost:8080/api/"
 	def requestHeaders = [Accept: 'application/json', 'Content-Type':'application/json']

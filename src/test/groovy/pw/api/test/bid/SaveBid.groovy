@@ -91,4 +91,48 @@ class SaveBid extends BaseBidTest {
 		where:
 			notes << validChars
 	}
+	
+	def "Save Bid - Check Created Event"() {
+		
+		given:'A bid containing valid data is to be saved'
+			def params = [
+				postId:1,
+				userId:5,
+				amount:120.26,
+				notes:'Test notes'
+			]
+					
+		when:'The bid is submitted'
+			def bidId = bidHelper.saveBid(params).id
+			def eventsForPostResponse = eventHelper.getEventsForPost(params.postId)
+			def eventsForUserResponse = eventHelper.getEventsForUser(params.userId)
+		
+		then:'An event is correctly created'
+			with(eventsForPostResponse[0]) {
+				post.id == params.postId
+				user.id == params.userId
+				bid.id == bidId
+				amount == params.amount
+				notes == params.notes
+				isPublic == true
+				//Needs to be revisited as it contains a username
+				//title == ''
+				type == 'BID_MADE'
+				dateCreated > tenSecondsAgo
+				dateUpdated > tenSecondsAgo
+			}
+			with(eventsForUserResponse[0]) {
+				post.id == params.postId
+				user.id == params.userId
+				bid.id == bidId
+				amount == params.amount
+				notes == params.notes
+				isPublic == true
+				//Needs to be revisited as it contains a username
+				//title == ''
+				type == 'BID_MADE'
+				dateCreated > tenSecondsAgo
+				dateUpdated > tenSecondsAgo
+			}
+	}
 }
