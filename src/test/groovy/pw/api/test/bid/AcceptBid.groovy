@@ -26,8 +26,8 @@ class AcceptBid extends BaseBidTest {
 		
 		then:"It's status is correctly saved"
 			with(acceptBidResponse) {
-				post.id == params.postId
-				user.id == params.userId
+				post?.id == params.postId
+				user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -37,8 +37,8 @@ class AcceptBid extends BaseBidTest {
 				dateUpdated > tenSecondsAgo
 			}
 			with(bidsForUserResponse[0]) {
-				post.id == params.postId
-				user.id == params.userId
+				post?.id == params.postId
+				user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -48,8 +48,8 @@ class AcceptBid extends BaseBidTest {
 				dateUpdated > tenSecondsAgo
 			}
 			with(bidsForUserPostsResponse[0]) {
-				post.id == params.postId
-				user.id == params.userId
+				post?.id == params.postId
+				user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -59,8 +59,8 @@ class AcceptBid extends BaseBidTest {
 				dateUpdated > tenSecondsAgo
 			}
 			with(bidsForPostResponse[0]) {
-				post.id == params.postId
-				user.id == params.userId
+				post?.id == params.postId
+				user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -90,10 +90,10 @@ class AcceptBid extends BaseBidTest {
 		
 		then:'An event is correctly created'
 			with(eventsForPostResponse[0]) {
-				post.id == params.postId
+				post?.id == params.postId
 				//Needs to be revisited as it's post.user.name
 				//user.id == params.userId
-				bid.id == bidId
+				bid?.id == bidId
 				amount == params.amount
 				notes == params.notes
 				isPublic == true

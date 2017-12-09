@@ -1,0 +1,4 @@
+{
+	"username": {{#if username}}"{{username}}"{{else}}null{{/if}},
+	"password": {{#if password}}"{{password}}"{{else}}null{{/if}}
+}
