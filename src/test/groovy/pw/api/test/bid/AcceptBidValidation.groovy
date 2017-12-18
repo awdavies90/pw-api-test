@@ -8,7 +8,7 @@ class AcceptBidValidation extends BaseBidTest {
 			def bidId = "999999999999"
 					
 		when:'A bid with an invalid id is accepted'
-			def response = bidHelper.acceptBid(bidId)
+			def response = bidHelper.acceptBid(bidId, individualUserToken)
 		
 		then:'An appropriate error response is received'
 			response.errors[0] == "No bid was found with this ID."
@@ -19,16 +19,16 @@ class AcceptBidValidation extends BaseBidTest {
 		given:'A Bid is already accepted'
 			def params = [
 				postId:1,
-				userId:5,
+				//userId:5,
 				amount:500,
 				notes:'These are some notes'
 			]
 					
 		when:'The bid is accepted again'
-			def createBidResponse = bidHelper.saveBid(params)
+			def createBidResponse = bidHelper.saveBid(params, bandUserToken)
 			def bidId = createBidResponse.id
-			def validAcceptBidResponse = bidHelper.acceptBid(bidId)
-			def invalidAcceptBidResponse = bidHelper.acceptBid(bidId)
+			def validAcceptBidResponse = bidHelper.acceptBid(bidId, individualUserToken)
+			def invalidAcceptBidResponse = bidHelper.acceptBid(bidId, individualUserToken)
 		
 		then:'An appropriate error response is received'
 			invalidAcceptBidResponse.errors[0] == 'The bid has already been accepted.'
@@ -39,16 +39,16 @@ class AcceptBidValidation extends BaseBidTest {
 		given:'A bid has already been withdrawn'
 			def params = [
 				postId:1,
-				userId:5,
+				//userId:5,
 				amount:500,
 				notes:'These are some notes'
 			]
 					
 		when:'The bid is accepted'
-			def createBidResponse = bidHelper.saveBid(params)
+			def createBidResponse = bidHelper.saveBid(params, bandUserToken)
 			def bidId = createBidResponse.id
-			def withdrawBidResponse = bidHelper.withdrawBid(bidId)
-			def invalidAcceptBidResponse = bidHelper.acceptBid(bidId)
+			def withdrawBidResponse = bidHelper.withdrawBid(bidId, bandUserToken)
+			def invalidAcceptBidResponse = bidHelper.acceptBid(bidId, individualUserToken)
 		
 		then:'An appropriate error response is received'
 			invalidAcceptBidResponse.errors[0] == 'The bid has already been withdrawn.'
@@ -59,24 +59,24 @@ class AcceptBidValidation extends BaseBidTest {
 		given:'Another bid for this post has been accepted'
 			def params = [
 				postId:1,
-				userId:5,
+				//userId:5,
 				amount:500,
 				notes:'These are some notes'
 			]
 			def params2 = [
 				postId:1,
-				userId:6,
+				//userId:6,
 				amount:500,
 				notes:'These are some notes'
 			]
 					
 		when:'The bid is accepted'
-			def createValidBidResponse = bidHelper.saveBid(params)
+			def createValidBidResponse = bidHelper.saveBid(params, bandUserToken)
 			def validBidId = createValidBidResponse.id
-			def createInvaildBidResponse = bidHelper.saveBid(params2)
+			def createInvaildBidResponse = bidHelper.saveBid(params2, bandUserToken2)
 			def invalidBidId = createInvaildBidResponse.id
-			def validAcceptBidResponse = bidHelper.acceptBid(validBidId)
-			def invalidAcceptBidResponse = bidHelper.acceptBid(invalidBidId)
+			def validAcceptBidResponse = bidHelper.acceptBid(validBidId, individualUserToken)
+			def invalidAcceptBidResponse = bidHelper.acceptBid(invalidBidId, individualUserToken)
 		
 		then:'An appropriate error response is received'
 			invalidAcceptBidResponse.errors[0] == 'Another bid for this post has already been accepted.'

@@ -15,7 +15,7 @@ class UpdateBidValidation extends BaseBidTest {
 			]
 					
 		when:'The bid is updated'
-			def response = bidHelper.updateBid(params)
+			def response = bidHelper.updateBid(params, bandUserToken)
 		
 		then:'An appropriate error message is returned'
 			response.errors[0] == "No bid was found with this ID."
@@ -26,17 +26,16 @@ class UpdateBidValidation extends BaseBidTest {
 		given:'A bid is to be updated'
 			def saveParams = [
 				postId:1,
-				userId:5,
 				amount:'500',
 				notes:'Some save notes'
 			]
-			def bidId = bidHelper.saveBid(saveParams).id
+			def bidId = bidHelper.saveBid(saveParams, bandUserToken).id
 			def updateParams = [
 				id:bidId
 			]
 					
 		when:'The bid is updated but niether a amount or notes value is provided'
-			def response = bidHelper.updateBid(updateParams)
+			def response = bidHelper.updateBid(updateParams, bandUserToken)
 		
 		then:'An appropriate error message is returned'
 			response.errors[0] == 'Either amount or notes must be supplied.'
@@ -47,11 +46,10 @@ class UpdateBidValidation extends BaseBidTest {
 		given:'A bid is to be updated'
 			def saveParams = [
 				postId:1,
-				userId:5,
 				amount:'500',
 				notes:'Some save notes'
 			]
-			def bidId = bidHelper.saveBid(saveParams).id
+			def bidId = bidHelper.saveBid(saveParams, bandUserToken).id
 			def updateParams = [
 				id:bidId,
 				amount:'500',
@@ -59,7 +57,7 @@ class UpdateBidValidation extends BaseBidTest {
 			]
 					
 		when:'The bid is updated with an invalid special character in the notes'
-			def response = bidHelper.updateBid(updateParams)
+			def response = bidHelper.updateBid(updateParams, bandUserToken)
 		
 		then:'An appropriate error message is returned'
 			response.errors[0] == 'Text cannot contain any of the following characters `^*_{}[]~|;<>'

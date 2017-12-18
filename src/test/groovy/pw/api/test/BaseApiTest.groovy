@@ -13,7 +13,7 @@ import groovy.json.JsonSlurper
 import groovy.time.TimeCategory
 import pw.api.test.utils.Templater
 
-class BaseApiTest extends Specification {
+abstract class BaseApiTest extends Specification {
 	
 	@Shared static validChars = ['£', '$', '!', '&', '()', '@', '?', ',', '.', '+', '=', '/', ':', '#']
 	@Shared static invalidChars = ['`', '^', '*', '_', '{', '}', '[', ']', '~', ';', '<', '>', '|']
@@ -24,8 +24,11 @@ class BaseApiTest extends Specification {
 	static baseUrl = "http://localhost:8080/api/"
 	static requestHeaders = ['Accept': 'application/json', 'Content-Type':'application/json']
 	
+	//String authToken
+	@Shared static authToken
 	@Shared static individualUserToken
 	@Shared static bandUserToken
+	@Shared static bandUserToken2
 	
 	//Helpers
 	@Shared static BidHelper bidHelper
@@ -39,6 +42,7 @@ class BaseApiTest extends Specification {
 		
 		individualUserToken = userHelper.getUserToken('davo123', "pass1234")
 		bandUserToken = userHelper.getUserToken('dazla3', "pass1234")
+		bandUserToken2 = userHelper.getUserToken('slimjim', "pass1234")
 	}
 	
 	def get(String url) {
@@ -46,6 +50,11 @@ class BaseApiTest extends Specification {
 	}
 	
 	def post(String url, String templateName, Map params) {
+		doRequestWithTemplating('POST', url, templateName, params)
+	}
+	
+	def post(String url, String templateName, Map params, token) {
+		authToken = token
 		doRequestWithTemplating('POST', url, templateName, params)
 	}
 	
@@ -82,25 +91,28 @@ class BaseApiTest extends Specification {
 			requestMethod = method
 			
 			//Set request headers
+			setRequestProperty('AuthToken', authToken)
 			requestHeaders.each { header ->
 				setRequestProperty(header.key, header.value)
 			}
 			
 			//Set request body
+			def requestJson
 			if (requestContent) {
-				def requestJson
 				try {
 					requestJson = JsonOutput.prettyPrint(requestContent)
 				} catch (groovy.json.JsonException e) {
-					throw new Error("The follwing json request content could not be parsed:\n $requestContent")
-				}
-				if (printRequest) {
-					println "$method - $url:\n $requestJson"
+					throw new Error("The following json request content could not be parsed:\n $requestContent")
 				}
 				outputStream.withWriter { request ->
 					request << requestJson
 				}
 			}
+			
+			//Print out request details
+			if (printRequest) {
+				println "$method - $url:\nToken:${getRequestProperty('AuthToken')}\n$requestJson"
+			} 
 			
 			//Execute request and get response
 			def responseContent = (responseCode == 200) ? content?.text : errorStream?.text

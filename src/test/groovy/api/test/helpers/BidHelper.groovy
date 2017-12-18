@@ -2,7 +2,7 @@ package api.test.helpers
 
 import spock.lang.*
 
-import javax.activity.InvalidActivityException
+import javax.lang.model.element.NestingKind
 
 import pw.api.test.BaseApiTest
 
@@ -15,7 +15,8 @@ class BidHelper {
 	
 	@Shared static savedBids = []
 	
-	def saveBid(Map params) {
+	def saveBid(Map params, String token) {
+		baseTest.authToken = token
 		def response = baseTest.post('bid/save', "bid/SaveBid", params)
 		if (response?.id) {
 			savedBids << response.id
@@ -23,7 +24,8 @@ class BidHelper {
 		response
 	}
 	
-	def updateBid(Map params) {
+	def updateBid(Map params, String token) {
+		baseTest.authToken = token
 		if (params.id) {
 			println "Performing put to bid/update/$params.id"
 			baseTest.put("bid/update/$params.id", "bid/UpdateBid", params)
@@ -36,44 +38,67 @@ class BidHelper {
 		baseTest.get("bid/$id")
 	}
 	
+	def getBid(id, String token) {
+		baseTest.authToken = token
+		baseTest.get("bid/$id")
+	}
+	
 	def getBidsForPost(postId) {
 		baseTest.get("bid/forPost/$postId")
 	}
 	
-	def getBidsForUser(userId) {
-		baseTest.get("bid/forUser/$userId")
+	def getBidsForPost(postId, String token) {
+		baseTest.authToken = token
+		baseTest.get("bid/forPost/$postId")
 	}
 	
-	def getBidsForUserPosts(userId) {
-		baseTest.get("bid/forUserPosts/$userId")
+	def getBidsForUser(token) {
+//		baseTest.get("bid/forUser/$userId")
+		baseTest.authToken = token
+		baseTest.get('bid/forUser')
 	}
 	
-	def acceptBid(id) {
+	def getBidsForUserPosts(token) {
+//		baseTest.get("bid/forUserPosts/$userId")
+		baseTest.authToken = token
+		baseTest.get('bid/forUserPosts')
+	}
+	
+	def acceptBid(id, String token) {
+		baseTest.authToken = token
 		baseTest.put("bid/accept/$id")
 	}
 	
-	def acceptBid(id, String acceptReason) {
+	def acceptBid(id, String acceptReason, String token) {
+		baseTest.authToken = token
 		def requestContent = "{\"reason\":\"$acceptReason\"}"
 		baseTest.put("bid/accept/$id", requestContent)
 	}
 	
-	def withdrawBid(id) {
+//	def withdrawBid(id) {
+//		baseTest.put("bid/withdraw/$id")
+//	}
+	
+	def withdrawBid(id, String token) {
+		baseTest.authToken = token
 		baseTest.put("bid/withdraw/$id")
 	}
 	
-	def withdrawBid(id, String withdrawReason) {
+	def withdrawBid(id, String withdrawReason, String token) {
+		baseTest.authToken = token
 		def requestContent = "{\"reason\":\"$withdrawReason\"}"
 		baseTest.put("bid/withdraw/$id", requestContent)
 	}
 	
-	def deleteAllBids() {
+	def deleteAllBids(String token) {
 		savedBids.each { bidId ->
-			deleteBid(bidId)
+			deleteBid(bidId, token)
 		}
 		savedBids = []
 	}
 	
-	def deleteBid(bidId) {
+	def deleteBid(bidId, String token) {
+		baseTest.authToken = token
 		baseTest.delete("bid/delete/$bidId")
 	}
 }

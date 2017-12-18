@@ -9,25 +9,25 @@ class AcceptBid extends BaseBidTest {
 		given:'A bid is to be accepted'
 			def params = [
 				postId:1,
-				userId:5,
+				//userId:5,
 				amount:120.26,
 				notes:'Test notes'
 			]
 			def reason = 'This bid is by far the best.'
 					
 		when:'The bid is accepted'
-			def bidId = bidHelper.saveBid(params)?.id
-			def acceptBidResponse = bidHelper.acceptBid(bidId, reason)
+			def bidId = bidHelper.saveBid(params, bandUserToken)?.id
+			def acceptBidResponse = bidHelper.acceptBid(bidId, reason, individualUserToken)
 			
 			def getResponse = bidHelper.getBid(bidId)
-			def bidsForUserResponse = bidHelper.getBidsForUser(params.userId)
-			def bidsForUserPostsResponse = bidHelper.getBidsForUserPosts(1)
+			def bidsForUserResponse = bidHelper.getBidsForUser(bandUserToken)
+			def bidsForUserPostsResponse = bidHelper.getBidsForUserPosts(individualUserToken)
 			def bidsForPostResponse = bidHelper.getBidsForPost(params.postId)
 		
 		then:"It's status is correctly saved"
 			with(acceptBidResponse) {
 				post?.id == params.postId
-				user?.id == params.userId
+				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -38,7 +38,7 @@ class AcceptBid extends BaseBidTest {
 			}
 			with(bidsForUserResponse[0]) {
 				post?.id == params.postId
-				user?.id == params.userId
+				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -49,7 +49,7 @@ class AcceptBid extends BaseBidTest {
 			}
 			with(bidsForUserPostsResponse[0]) {
 				post?.id == params.postId
-				user?.id == params.userId
+				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -60,7 +60,7 @@ class AcceptBid extends BaseBidTest {
 			}
 			with(bidsForPostResponse[0]) {
 				post?.id == params.postId
-				user?.id == params.userId
+				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
 				status == 'ACCEPTED'
@@ -76,14 +76,14 @@ class AcceptBid extends BaseBidTest {
 		given:'A bid is to be accepted'
 			def params = [
 				postId:1,
-				userId:5,
+				//userId:5,
 				amount:120.26,
 				notes:'Test notes'
 			]
 					
 		when:'The accept request is submitted'
-			def bidId = bidHelper.saveBid(params).id
-			def acceptBidResponse = bidHelper.acceptBid(bidId, "It's an awesome bid.")
+			def bidId = bidHelper.saveBid(params, bandUserToken).id
+			def acceptBidResponse = bidHelper.acceptBid(bidId, "It's an awesome bid.", individualUserToken)
 			
 			def eventsForPostResponse = eventHelper.getEventsForPost(params.postId)
 			//def eventsForUserResponse = eventHelper.getEventsForUser(params.userId)

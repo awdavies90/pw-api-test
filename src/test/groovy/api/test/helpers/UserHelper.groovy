@@ -33,7 +33,7 @@ class UserHelper {
 			user.token
 		} else {
 			def response = login(username, password)
-			response?.user?.username
+			response?.token
 		}
 	}
 	
