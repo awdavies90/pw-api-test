@@ -40,9 +40,9 @@ abstract class BaseApiTest extends Specification {
 		eventHelper = new EventHelper(this)
 		userHelper = new UserHelper(this)
 		
-		individualUserToken = userHelper.getUserToken('davo123', "pass1234")
-		bandUserToken = userHelper.getUserToken('dazla3', "pass1234")
-		bandUserToken2 = userHelper.getUserToken('slimjim', "pass1234")
+		individualUserToken = userHelper.getUserToken('davo123', 'pass1234')
+		bandUserToken = userHelper.getUserToken('dazla3', 'pass1234')
+		bandUserToken2 = userHelper.getUserToken('slimjim', 'pass1234')
 	}
 	
 	def get(String url) {
