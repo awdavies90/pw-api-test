@@ -90,15 +90,15 @@ class BidHelper {
 		baseTest.put("bid/withdraw/$id", requestContent)
 	}
 	
-	def deleteAllBids(String token) {
+	def deleteAllBids() {
 		savedBids.each { bidId ->
-			deleteBid(bidId, token)
+			deleteBid(bidId)
 		}
 		savedBids = []
 	}
 	
-	def deleteBid(bidId, String token) {
-		baseTest.authToken = token
+	def deleteBid(bidId) {
+		baseTest.authToken = baseTest.bandUserToken
 		baseTest.delete("bid/delete/$bidId")
 	}
 }
