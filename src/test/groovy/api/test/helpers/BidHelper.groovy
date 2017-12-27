@@ -98,7 +98,11 @@ class BidHelper {
 	}
 	
 	def deleteBid(bidId) {
-		baseTest.authToken = baseTest.bandUserToken
+		deleteBid(bidId, baseTest.adminUserToken)
+	}
+	
+	def deleteBid(bidId, String token) {
+		baseTest.authToken = token
 		baseTest.delete("bid/delete/$bidId")
 	}
 }
