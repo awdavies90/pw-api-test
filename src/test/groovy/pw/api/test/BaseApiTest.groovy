@@ -28,6 +28,7 @@ abstract class BaseApiTest extends Specification {
 	@Shared static authToken
 	@Shared static adminUserToken
 	@Shared static individualUserToken
+	@Shared static individualUserToken2
 	@Shared static bandUserToken
 	@Shared static bandUserToken2
 	
@@ -43,6 +44,7 @@ abstract class BaseApiTest extends Specification {
 		
 		adminUserToken = userHelper.getUserToken('alunAdmin', 'pass1234')
 		individualUserToken = userHelper.getUserToken('davo123', 'pass1234')
+		individualUserToken2 = userHelper.getUserToken('therealjesus', 'pass1234')
 		bandUserToken = userHelper.getUserToken('dazla3', 'pass1234')
 		bandUserToken2 = userHelper.getUserToken('slimjim', 'pass1234')
 	}
