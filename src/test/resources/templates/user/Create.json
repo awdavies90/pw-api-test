@@ -1,0 +1,7 @@
+{
+	"username": {{#if username}}"{{username}}"{{else}}null{{/if}},
+	"password": {{#if password}}"{{password}}"{{else}}null{{/if}},
+	"confirmPassword": {{#if confirmPassword}}"{{confirmPassword}}"{{else}}null{{/if}},
+	"email": {{#if email}}"{{email}}"{{else}}null{{/if}},
+	"role": {{#if role}}"{{role}}"{{else}}null{{/if}}
+}

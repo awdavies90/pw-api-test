@@ -1,5 +1,6 @@
 package api.test.helpers
 
+import groovy.json.JsonSlurper
 import pw.api.test.BaseApiTest
 import spock.lang.*
 
@@ -12,9 +13,20 @@ class UserHelper {
 		this.baseTest = baseTest
 	}
 	
+	def create(Map params) {
+		def response = baseTest.post("user/create", "user/Create", params)
+		addToLoggedInUsers(response)
+		response
+	}
+	
 	def login(String username, String password) {
 		def params = [username:username, password:password]
 		def response = baseTest.post('user/apiLogin', 'user/Login', params)
+		addToLoggedInUsers(response)
+		response
+	}
+	
+	private addToLoggedInUsers(response) {
 		if (response?.user?.id) {
 			response.user.with {
 				if (loggedInUsers) {
@@ -24,7 +36,6 @@ class UserHelper {
 				}
 			}
 		}
-		response
 	}
 	
 	def getUserToken(String username, String password) {
