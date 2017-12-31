@@ -13,6 +13,17 @@ class UserHelper {
 		this.baseTest = baseTest
 	}
 	
+	def getRandomUser(String role) {
+		def response = new JsonSlurper().parse(new URL('https://randomuser.me/api'))
+		[
+			username:response.results[0].login.username,
+			password:response.results[0].login.password,
+			confirmPassword:response.results[0].login.password,
+			email:response.results[0].email,
+			role:role
+		]
+	}
+	
 	def create(Map params) {
 		def response = baseTest.post("user/create", "user/Create", params)
 		addToLoggedInUsers(response)
