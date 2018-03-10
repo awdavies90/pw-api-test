@@ -1,4 +1,4 @@
-package api.test.helpers
+package pw.api.test.helpers
 
 import spock.lang.*
 

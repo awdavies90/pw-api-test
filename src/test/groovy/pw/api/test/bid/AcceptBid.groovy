@@ -1,5 +1,6 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
 import spock.lang.*
 
 class AcceptBid extends BaseBidTest {
@@ -8,9 +9,9 @@ class AcceptBid extends BaseBidTest {
 		
 		given:'A bid is to be accepted'
 			def params = [
-				postId:1,
+				postId:postHelper.getRandomPostId(individualUserToken),
 				//userId:5,
-				amount:120.26,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Test notes'
 			]
 			def reason = 'This bid is by far the best.'
@@ -30,7 +31,7 @@ class AcceptBid extends BaseBidTest {
 				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'ACCEPTED'
+				status == [name:'ACCEPTED', displayName:'Accepted']
 				acceptReason == reason
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -41,7 +42,7 @@ class AcceptBid extends BaseBidTest {
 				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'ACCEPTED'
+				status == [name:'ACCEPTED', displayName:'Accepted']
 				acceptReason == reason
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -52,7 +53,7 @@ class AcceptBid extends BaseBidTest {
 				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'ACCEPTED'
+				status == [name:'ACCEPTED', displayName:'Accepted']
 				acceptReason == reason
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -63,7 +64,7 @@ class AcceptBid extends BaseBidTest {
 				//user?.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'ACCEPTED'
+				status == [name:'ACCEPTED', displayName:'Accepted']
 				acceptReason == reason
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -75,9 +76,9 @@ class AcceptBid extends BaseBidTest {
 		
 		given:'A bid is to be accepted'
 			def params = [
-				postId:1,
+				postId:postHelper.getRandomPostId(individualUserToken),
 				//userId:5,
-				amount:120.26,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Test notes'
 			]
 					
@@ -99,7 +100,7 @@ class AcceptBid extends BaseBidTest {
 				isPublic == true
 				//Needs to be revisited as it contains a username
 				//title == ''
-				type == 'BID_ACCEPTED'
+				type == [name:'BID_ACCEPTED', displayName:'Bid Accepted']
 				dateCreated > tenSecondsAgo
 				dateUpdated > tenSecondsAgo
 			}

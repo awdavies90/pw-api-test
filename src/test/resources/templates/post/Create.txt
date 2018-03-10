@@ -1,0 +1,7 @@
+{
+	"gigName":"{{name}}",
+	"date":"{{date}}",
+	"venue": {
+		{{#if venueId}}"id": {{venueId}}{{/if}}
+	}
+}

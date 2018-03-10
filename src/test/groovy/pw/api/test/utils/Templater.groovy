@@ -11,7 +11,7 @@ class Templater {
 		if (templateName && params) {
 			def loader = new ClassPathTemplateLoader();
 			loader.setPrefix("/templates");
-			loader.setSuffix(".json");
+			loader.setSuffix(".txt");
 			def handlebars = new Handlebars(loader);
 			Template template = handlebars.compile(templateName);
 			def output = template.apply(params)

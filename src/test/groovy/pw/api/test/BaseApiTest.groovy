@@ -5,9 +5,11 @@ import spock.lang.*
 
 import javax.xml.ws.http.HTTPException
 
-import api.test.helpers.BidHelper
-import api.test.helpers.EventHelper
-import api.test.helpers.UserHelper
+import pw.api.test.helpers.BidHelper
+import pw.api.test.helpers.EventHelper
+import pw.api.test.helpers.PostHelper
+import pw.api.test.helpers.UserHelper
+import pw.api.test.helpers.VenueHelper
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.time.TimeCategory
@@ -36,11 +38,15 @@ abstract class BaseApiTest extends Specification {
 	@Shared static BidHelper bidHelper
 	@Shared static EventHelper eventHelper
 	@Shared static UserHelper userHelper
+	@Shared static VenueHelper venueHelper
+	@Shared static PostHelper postHelper
 	
 	def setupSpec() {
 		bidHelper = new BidHelper(this)
 		eventHelper = new EventHelper(this)
 		userHelper = new UserHelper(this)
+		venueHelper = new VenueHelper(this)
+		postHelper = new PostHelper(this)
 		
 		adminUserToken = userHelper.getUserToken('alunAdmin', 'pass1234')
 		individualUserToken = userHelper.getUserToken('davo123', 'pass1234')
@@ -50,6 +56,10 @@ abstract class BaseApiTest extends Specification {
 	}
 	
 	def get(String url) {
+		doRequest('GET', "$baseUrl$url", null)
+	}
+	
+	def getExternal(String url) {
 		doRequest('GET', url, null)
 	}
 	
@@ -63,15 +73,15 @@ abstract class BaseApiTest extends Specification {
 	}
 	
 	def post(String url, String requestContent) {
-		doRequest('POST', url, requestContent)
+		doRequest('POST', "$baseUrl$url", requestContent)
 	}
 	
 	def put(String url) {
-		doRequest('PUT', url, null)
+		doRequest('PUT', "$baseUrl$url", null)
 	}
 	
 	def put(String url, String requestContent) {
-		doRequest('PUT', url, requestContent)
+		doRequest('PUT', "$baseUrl$url", requestContent)
 	}
 	
 	def put(String url, String templateName, Map params) {
@@ -79,17 +89,17 @@ abstract class BaseApiTest extends Specification {
 	}
 	
 	def delete(String url) {
-		doRequest('DELETE', url, null)
+		doRequest('DELETE', "$baseUrl$url", null)
 	}
 	
 	def doRequestWithTemplating(String method, String url, String templateName, Map params) {
 		def requestContent = Templater.use(templateName, params)
-		doRequest(method, url, requestContent)
+		doRequest(method, "$baseUrl$url", requestContent)
 	}
 	
 	def doRequest(String method, String url, String requestContent) {
 		def responseJson
-		HttpURLConnection connection = new URL("$baseUrl$url").openConnection()
+		HttpURLConnection connection = new URL(url).openConnection()
 		connection.with {
 			doOutput = true
 			requestMethod = method
