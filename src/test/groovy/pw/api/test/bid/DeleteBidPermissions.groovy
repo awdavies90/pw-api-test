@@ -1,6 +1,7 @@
 package pw.api.test.bid
 
-import spock.lang.*
+import pw.api.test.utils.RandomUtils
+import spock.lang.Unroll
 
 class DeleteBidPermissions extends BaseBidTest {
 	
@@ -9,8 +10,8 @@ class DeleteBidPermissions extends BaseBidTest {
 		
 		given:'A Bid is to be deleted'
 			def params = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					

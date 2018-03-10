@@ -1,5 +1,6 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
 import spock.lang.*
 
 class WithdrawBidPermissions extends BaseBidTest {
@@ -9,8 +10,8 @@ class WithdrawBidPermissions extends BaseBidTest {
 		
 		given:'A Bid is to be withdrawn'
 			def params = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					

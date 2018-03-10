@@ -1,5 +1,7 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
+
 class AcceptBidValidation extends BaseBidTest {
 	
 	def "1 - Accept Bid - Incorrect Bid Id"() {
@@ -18,9 +20,9 @@ class AcceptBidValidation extends BaseBidTest {
 		
 		given:'A Bid is already accepted'
 			def params = [
-				postId:1,
+				postId:postHelper.getRandomPostId(individualUserToken),
 				//userId:5,
-				amount:500,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					
@@ -38,9 +40,9 @@ class AcceptBidValidation extends BaseBidTest {
 		
 		given:'A bid has already been withdrawn'
 			def params = [
-				postId:1,
+				postId:postHelper.getRandomPostId(individualUserToken),
 				//userId:5,
-				amount:500,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					
@@ -58,15 +60,15 @@ class AcceptBidValidation extends BaseBidTest {
 		
 		given:'Another bid for this post has been accepted'
 			def params = [
-				postId:1,
+				postId:postHelper.getRandomPostId(individualUserToken),
 				//userId:5,
-				amount:500,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 			def params2 = [
-				postId:1,
+				postId:postHelper.getRandomPostId(individualUserToken),
 				//userId:6,
-				amount:500,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					

@@ -1,5 +1,6 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
 import spock.lang.*
 
 @Unroll
@@ -21,10 +22,10 @@ class SaveBidValidation extends BaseBidTest {
 			response.errors[0] == 'The following params are required [postId, amount, notes]'
 		
 		where:
-			postId | amount | notes 				  | description
-			null   | 120	| 'These are some notes'  | 'No postId'
-			1      | null	| 'These are some notes'  | 'No amount'
-			1      | 500	| null					  | 'No notes'
+			postId											| amount 								  | notes 				  | description
+			null											| RandomUtils.getRandomDecimal(100, 1000) | 'These are some notes'| 'No postId'
+			postHelper.getRandomPostId(individualUserToken) | null									  | 'These are some notes'| 'No amount'
+			postHelper.getRandomPostId(individualUserToken) | RandomUtils.getRandomDecimal(100, 1000) | null				  | 'No notes'
 	}
 	
 	def "Save Bid Validation - Incorrect Post ID"() {
@@ -32,7 +33,7 @@ class SaveBidValidation extends BaseBidTest {
 		given:'There is a test'
 			def params = [
 				postId:999999,
-				amount:500,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					
@@ -47,8 +48,8 @@ class SaveBidValidation extends BaseBidTest {
 		
 		given:'There is a test'
 			def params = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					
@@ -63,8 +64,8 @@ class SaveBidValidation extends BaseBidTest {
 		
 		given:'There is a test'
 			def params = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					
@@ -80,15 +81,15 @@ class SaveBidValidation extends BaseBidTest {
 		
 		given:'There is a test'
 			def params = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					
 		when:'The test is executed'
 			def validResponse = bidHelper.saveBid(params, bandUserToken)
 			bidHelper.acceptBid(validResponse?.id, individualUserToken)
-			def response = bidHelper.saveBid(postId:1, amount:500, notes:'These are some notes', bandUserToken2)
+			def response = bidHelper.saveBid(params, bandUserToken2)
 		
 		then:'The test passes'
 			response.errors[0] == 'A bid for this post has already been accepted.'
@@ -98,8 +99,8 @@ class SaveBidValidation extends BaseBidTest {
 		
 		given:'There is a test'
 			def params = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:notes
 			]
 					

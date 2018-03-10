@@ -1,16 +1,15 @@
 package pw.api.test.bid
 
-import spock.lang.*
+import pw.api.test.utils.RandomUtils
 
-@Unroll
 class UpdateBid extends BaseBidTest {
 
 	def "Update Bid"() {
 		
 		given:'A bid is to be updated'
 			def saveParams = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Some save notes'
 			]
 			def bidId = bidHelper.saveBid(saveParams, bandUserToken).id
@@ -33,7 +32,7 @@ class UpdateBid extends BaseBidTest {
 				//user.id == saveParams.userId
 				amount == updateParams.amount
 				notes == updateParams.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -44,7 +43,7 @@ class UpdateBid extends BaseBidTest {
 				//user.id == saveParams.userId
 				amount == updateParams.amount
 				notes == updateParams.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -55,7 +54,7 @@ class UpdateBid extends BaseBidTest {
 				//user.id == saveParams.userId
 				amount == updateParams.amount
 				notes == updateParams.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -66,7 +65,7 @@ class UpdateBid extends BaseBidTest {
 				//user.id == saveParams.userId
 				amount == updateParams.amount
 				notes == updateParams.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo

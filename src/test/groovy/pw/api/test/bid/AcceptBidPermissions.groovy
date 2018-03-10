@@ -1,13 +1,15 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
+
 class AcceptBidPermissions extends BaseBidTest {
 	
 	def "1 - Accept Bid Permissions - Only the Owner of the Post Can Accept a Bid"() {
 		
 		given:'A Bid is to be accepted'
 			def params = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					

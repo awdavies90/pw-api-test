@@ -1,13 +1,15 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
+
 class DeleteBid extends BaseBidTest {
 	
 	def "Delete Bid"() {
 		
 		given:'A bid is to be deleted'
 			def params = [
-				postId:1,
-				amount:120.26,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Test notes'
 			]
 			def reason = 'Made the bid by mistake.'

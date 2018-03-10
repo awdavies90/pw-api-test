@@ -1,5 +1,6 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
 import spock.lang.*
 
 @Unroll
@@ -10,7 +11,7 @@ class UpdateBidValidation extends BaseBidTest {
 		given:'A bid with an ID which does not exist is to be updated'
 			def params = [
 				id: 999999999,
-				amount:500,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 					
@@ -25,8 +26,8 @@ class UpdateBidValidation extends BaseBidTest {
 		
 		given:'A bid is to be updated'
 			def saveParams = [
-				postId:1,
-				amount:'500',
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Some save notes'
 			]
 			def bidId = bidHelper.saveBid(saveParams, bandUserToken).id
@@ -45,8 +46,8 @@ class UpdateBidValidation extends BaseBidTest {
 		
 		given:'A bid is to be updated'
 			def saveParams = [
-				postId:1,
-				amount:'500',
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Some save notes'
 			]
 			def bidId = bidHelper.saveBid(saveParams, bandUserToken).id

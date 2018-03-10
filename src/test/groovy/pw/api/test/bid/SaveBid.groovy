@@ -1,5 +1,6 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
 import spock.lang.*
 
 @Unroll
@@ -9,9 +10,8 @@ class SaveBid extends BaseBidTest {
 		
 		given:'A bid containing valid data is to be saved'
 			def params = [
-				postId:1,
-				//userId:5,
-				amount:120.26,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Test notes'
 			]
 					
@@ -29,7 +29,7 @@ class SaveBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -40,7 +40,7 @@ class SaveBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -51,7 +51,7 @@ class SaveBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -62,7 +62,7 @@ class SaveBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'PENDING'
+				status == [name:'PENDING', displayName:'Pending']
 				acceptReason == null
 				withdrawReason == null
 				dateCreated > tenSecondsAgo
@@ -74,9 +74,8 @@ class SaveBid extends BaseBidTest {
 		
 		given:'A bid containing valid data is to be saved'
 			def params = [
-				postId:1,
-				//userId:5,
-				amount:120.26,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Test notes'
 			]
 					
@@ -95,7 +94,7 @@ class SaveBid extends BaseBidTest {
 				isPublic == true
 				//Needs to be revisited as it contains a username
 				//title == ''
-				type == 'BID_MADE'
+				type == [name:'BID_MADE', displayName:'Bid Made']
 				dateCreated > tenSecondsAgo
 				dateUpdated > tenSecondsAgo
 			}
@@ -108,7 +107,7 @@ class SaveBid extends BaseBidTest {
 				isPublic == true
 				//Needs to be revisited as it contains a username
 				//title == ''
-				type == 'BID_MADE'
+				type == [name:'BID_MADE', displayName:'Bid Made']
 				dateCreated > tenSecondsAgo
 				dateUpdated > tenSecondsAgo
 			}

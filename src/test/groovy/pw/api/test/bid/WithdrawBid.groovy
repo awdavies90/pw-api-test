@@ -1,13 +1,15 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
+
 class WithdrawBid extends BaseBidTest {
 	
 	def "Withdraw Bid"() {
 		
 		given:'A bid is to be accepted'
 			def params = [
-				postId:1,
-				amount:120.26,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Test notes'
 			]
 			def reason = 'Can no longer do the gig.'
@@ -27,7 +29,7 @@ class WithdrawBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'WITHDRAWN'
+				status == [name:'WITHDRAWN', displayName:'Withdrawn']
 				acceptReason == null
 				withdrawReason == reason
 				dateCreated > tenSecondsAgo
@@ -38,7 +40,7 @@ class WithdrawBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'WITHDRAWN'
+				status == [name:'WITHDRAWN', displayName:'Withdrawn']
 				acceptReason == null
 				withdrawReason == reason
 				dateCreated > tenSecondsAgo
@@ -49,7 +51,7 @@ class WithdrawBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'WITHDRAWN'
+				status == [name:'WITHDRAWN', displayName:'Withdrawn']
 				acceptReason == null
 				withdrawReason == reason
 				dateCreated > tenSecondsAgo
@@ -60,7 +62,7 @@ class WithdrawBid extends BaseBidTest {
 				//user.id == params.userId
 				amount == params.amount
 				notes == params.notes
-				status == 'WITHDRAWN'
+				status == [name:'WITHDRAWN', displayName:'Withdrawn']
 				acceptReason == null
 				withdrawReason == reason
 				dateCreated > tenSecondsAgo

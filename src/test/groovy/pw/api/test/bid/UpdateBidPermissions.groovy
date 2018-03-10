@@ -1,5 +1,6 @@
 package pw.api.test.bid
 
+import pw.api.test.utils.RandomUtils
 import spock.lang.*
 
 class UpdateBidPermissions extends BaseBidTest {
@@ -9,12 +10,12 @@ class UpdateBidPermissions extends BaseBidTest {
 		
 		given:'A Bid is to be updated'
 			def saveParams = [
-				postId:1,
-				amount:500,
+				postId:postHelper.getRandomPostId(individualUserToken),
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'These are some notes'
 			]
 			def updateParams = [
-				amount:510,
+				amount:RandomUtils.getRandomDecimal(100, 1000),
 				notes:'Price has gone up a bit'
 			]
 					
