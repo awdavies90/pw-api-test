@@ -14,10 +14,10 @@ class EventHelper {
 	}
 	
 	def getEventsForPost(postId) {
-		baseTest.get("event/forPost/$postId")
+		baseTest.getCall("event/forPost/$postId")
 	}
 	
 	def getEventsForUser(userId) {
-		baseTest.get("event/forUser/$userId")
+		baseTest.getCall("event/forUser/$userId")
 	}
 }

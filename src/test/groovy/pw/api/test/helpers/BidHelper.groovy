@@ -35,33 +35,33 @@ class BidHelper {
 	}
 	
 	def getBid(id) {
-		baseTest.get("bid/$id")
+		baseTest.getCall("bid/$id")
 	}
 	
 	def getBid(id, String token) {
 		baseTest.authToken = token
-		baseTest.get("bid/$id")
+		baseTest.getCall("bid/$id")
 	}
 	
 	def getBidsForPost(postId) {
-		baseTest.get("bid/forPost/$postId")
+		baseTest.getCall("bid/forPost/$postId")
 	}
 	
 	def getBidsForPost(postId, String token) {
 		baseTest.authToken = token
-		baseTest.get("bid/forPost/$postId")
+		baseTest.getCall("bid/forPost/$postId")
 	}
 	
 	def getBidsForUser(token) {
 //		baseTest.get("bid/forUser/$userId")
 		baseTest.authToken = token
-		baseTest.get('bid/forUser')
+		baseTest.getCall('bid/forUser')
 	}
 	
 	def getBidsForUserPosts(token) {
 //		baseTest.get("bid/forUserPosts/$userId")
 		baseTest.authToken = token
-		baseTest.get('bid/forUserPosts')
+		baseTest.getCall('bid/forUserPosts')
 	}
 	
 	def acceptBid(id, String token) {

@@ -18,4 +18,9 @@ class RandomUtils {
 		Date date = new Date().plus(30)
 		date.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
 	}
+	
+	static getRandomValueFrom(List listOfValues) {
+		def randomIndex = random.nextInt(listOfValues.size())
+		listOfValues[randomIndex]
+	}
 }

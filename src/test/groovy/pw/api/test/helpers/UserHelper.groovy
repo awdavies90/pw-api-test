@@ -26,24 +26,24 @@ class UserHelper {
 	
 	def create(Map params) {
 		def response = baseTest.post("user/create", "user/Create", params)
-		addToLoggedInUsers(response)
+		addToLoggedInUsers(response, params.password)
 		response
 	}
 	
 	def login(String username, String password) {
 		def params = [username:username, password:password]
 		def response = baseTest.post('user/apiLogin', 'user/Login', params)
-		addToLoggedInUsers(response)
+		addToLoggedInUsers(response, password)
 		response
 	}
 	
-	private addToLoggedInUsers(response) {
+	private addToLoggedInUsers(response, String password) {
 		if (response?.user?.id) {
-			response.user.with {
-				if (loggedInUsers) {
-					loggedInUsers << [id:id, username:userame, password:password, token:token]
+			response.with {
+				if (this.loggedInUsers) {
+					this.loggedInUsers << [id:user.id, username:user.userame, password:password, token:token]
 				} else {
-					loggedInUsers = [[id:id, username:userame, password:password, token:token]]
+					this.loggedInUsers = [[id:user.id, username:user.userame, password:password, token:token]]
 				}
 			}
 		}
@@ -66,5 +66,10 @@ class UserHelper {
 		} else {
 			throw new Error("User wih id $userId is not logged in")
 		}
+	}
+	
+	def getUserIdByToken(String token) {
+		def user = loggedInUsers.find { it.token == token }
+		user?.id
 	}
 }

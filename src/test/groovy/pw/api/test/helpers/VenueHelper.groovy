@@ -14,13 +14,18 @@ class VenueHelper {
 	
 	def venueSearch(String searchText, String token) {
 		baseTest.authToken = token
-		def venues = baseTest.get("venue/search?address=${URLEncoder.encode(searchText, 'UTF-8')}")
+		def venues = baseTest.getCall("venue/search?address=${URLEncoder.encode(searchText, 'UTF-8')}")
 		if (venues) {
 			venues.each {
 				venueIds << it.id
 			}
 		}
 		venues
+	}
+	
+	def saveVenue(Map params, String token) {
+		baseTest.authToken = token
+		def response = baseTest.post('venue/save', 'venue/SaveVenue', params)
 	}
 	
 	int getRandomVenueId(String token) {
