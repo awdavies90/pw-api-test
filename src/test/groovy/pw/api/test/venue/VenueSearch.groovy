@@ -24,20 +24,84 @@ class VenueSearch extends BaseApiTest {
 			def response = venueHelper.venueSearch(postcode, individualUserToken)
 		
 		then:'Nearby venues are correctly returned'
-			response.size() > 0
-			response.every { it.id != null }
-			response.every { it.address != null && it.address != '' }
-			response.every { it.dateCreated != null && it.dateCreated != '' }
-			response.every { it.dateUpdated != null && it.dateUpdated != '' }
-			response.every { it.googleMapsPlaceId != null && it.googleMapsPlaceId != '' }
-			response.every { it.isCustomAddress == false }
-			response.every { it.location.id != null }
-			response.every { it.location.lat != null }
-			response.every { it.location.lng != null }
-			response.every { it.name != null }
+			verifyVenues(response)
 	}
 	
-	@IgnoreRest
+	def "Get Venue from Google Maps - By Part Postcode"() {
+		
+		given:'A venue is searched for by part of its postcode'
+			def postcodes = [
+				'L30',
+				'IP14',
+				'LN6',
+				'SG18',
+				'W1T',
+				'SA3'
+			]
+			def postcode = RandomUtils.getRandomValueFrom(postcodes)
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(postcode, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyVenues(response)
+	}
+	
+	def "Get Venue from Google Maps - By Area"() {
+		
+		given:'A venue is searched for by area name'
+			def areas = [
+				'Hucknall',
+				'Hopton',
+				'Willenhall',
+				'Moira',
+				'Worsley',
+				'Billington'
+			]
+			def area = RandomUtils.getRandomValueFrom(areas)
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(area, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyVenues(response)
+	}
+	
+	def "Get Venue from Google Maps - By Name and Area"() {
+		
+		given:'A venue is searched for by venue name and area name'
+			def areas = [
+				'Belgian Monk, Charing Cross',
+				'Plough Inn, Ellington',
+				'Middlemore Farm, Daventry',
+				'The Prince, Wood Green',
+				'Brown Cow, Millom',
+				'Crown, Nazeing'
+			]
+			def area = RandomUtils.getRandomValueFrom(areas)
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(area, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyVenues(response)
+	}
+	
+	def verifyVenues(response) {
+		assert response.size() > 0
+		assert response.every { it.id != null }
+		assert response.every { it.address != null && it.address != '' }
+		assert response.every { it.dateCreated != null && it.dateCreated != '' }
+		assert response.every { it.dateUpdated != null && it.dateUpdated != '' }
+		assert response.every { it.googleMapsPlaceId != null && it.googleMapsPlaceId != '' }
+		assert response.every { it.isCustomAddress == false }
+		assert response.every { it.location.id != null }
+		assert response.every { it.location.lat != null }
+		assert response.every { it.location.lng != null }
+		assert response.every { it.name != null }
+		true
+	}
+	
 	def "Get Custom Venue - By Postcode"() {
 		
 		given:'A venue is searched for by postcode'

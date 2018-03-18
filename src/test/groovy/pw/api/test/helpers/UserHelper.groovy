@@ -64,7 +64,7 @@ class UserHelper {
 		if (user) {
 			user.token
 		} else {
-			throw new Error("User wih id $userId is not logged in")
+			throw new Error("User with id $userId is not logged in")
 		}
 	}
 	
