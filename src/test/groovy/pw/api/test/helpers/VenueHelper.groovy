@@ -6,6 +6,7 @@ import pw.api.test.BaseApiTest
 class VenueHelper {
 	
 	List<Integer> venueIds = []
+	List<Integer> customVenueIds = []
 	BaseApiTest baseTest
 	
 	def VenueHelper(BaseApiTest baseTest) {
@@ -26,6 +27,15 @@ class VenueHelper {
 	def saveVenue(Map params, String token) {
 		baseTest.authToken = token
 		def response = baseTest.post('venue/save', 'venue/SaveVenue', params)
+		if (response) {
+			customVenueIds << response.id
+		}
+		response
+	}
+	
+	def getVenue(id, String token) {
+		baseTest.authToken = token
+		baseTest.getCall("venue/$id")
 	}
 	
 	int getRandomVenueId(String token) {
@@ -41,5 +51,21 @@ class VenueHelper {
 	def getRandomPostcode() {
 		def response = baseTest.getExternal('http://api.postcodes.io/random/postcodes')
 		response.result.postcode
+	}
+	
+	def deleteVenue(id, String token) {
+		baseTest.authToken = token
+		baseTest.delete("venue/$id")
+	}
+	
+	def deleteVenue(id) {
+		deleteVenue(id, baseTest.adminUserToken)
+	}
+	
+	def deleteAllCustomVenues() {
+		customVenueIds.each { venueId ->
+			deleteVenue(venueId)
+		}
+		customVenueIds = []
 	}
 }

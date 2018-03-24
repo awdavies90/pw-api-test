@@ -5,7 +5,21 @@ import pw.api.test.helpers.VenueHelper
 import pw.api.test.utils.RandomUtils
 import spock.lang.*
 
-class VenueSearch extends BaseApiTest {
+class VenueSearch extends BaseVenueTest {
+	
+	@Shared
+	static customVenueParams = [
+		name:'My Custom Venue',
+		address:'Nowhere Street, Nowherarea, Nowherecity',
+		postcode:'VE1 2NU',
+		street:'Nowhere Street',
+		area:'Nowherarea',
+		city:'Nowherecity'
+	]
+	
+	def setupSpec() {
+		venueHelper.saveVenue(customVenueParams, individualUserToken)
+	}
 	
 	def "Get Venue from Google Maps - By Postcode"() {
 		
@@ -67,7 +81,7 @@ class VenueSearch extends BaseApiTest {
 			verifyVenues(response)
 	}
 	
-	def "Get Venue from Google Maps - By Name and Area"() {
+	def "Get Venue from Google Maps - By Venue Name and Area"() {
 		
 		given:'A venue is searched for by venue name and area name'
 			def areas = [
@@ -82,6 +96,26 @@ class VenueSearch extends BaseApiTest {
 					
 		when:'The search is performed'
 			def response = venueHelper.venueSearch(area, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyVenues(response)
+	}
+	
+	def "Get Venue from Google Maps - By City"() {
+		
+		given:'A venue is searched for by venue name and area name'
+			def cities = [
+				'Rossendale',
+				'Chorley',
+				'Bury',
+				'Chester',
+				'Lisburn',
+				'Castleford'
+			]
+			def city = RandomUtils.getRandomValueFrom(cities)
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(city, individualUserToken)
 		
 		then:'Nearby venues are correctly returned'
 			verifyVenues(response)
@@ -102,30 +136,90 @@ class VenueSearch extends BaseApiTest {
 		true
 	}
 	
+	def "Get Custom Venue - By Venue Name"() {
+		
+		given:'A venue is searched for by venue name'
+			def venueName = customVenueParams.name
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(venueName, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyCustomVenues(response)
+	}
+	
 	def "Get Custom Venue - By Postcode"() {
 		
 		given:'A venue is searched for by postcode'
-			def venueParams = [
-				name:'My New Venue',
-				address:'Woodside Rd, Woodlands, Doncaster',
-				postcode:'VE1 2NU'	
-			]
-			venueHelper.saveVenue(venueParams, individualUserToken)
+			def postcode = customVenueParams.postcode
 					
 		when:'The search is performed'
-			def response = venueHelper.venueSearch(venueParams.postcode, individualUserToken)
+			def response = venueHelper.venueSearch(postcode, individualUserToken)
 		
 		then:'Nearby venues are correctly returned'
-			response.size() == 1
-			response[0].id != null
-			response[0].address == venueParams.address
-			response[0].dateCreated != null && response[0].dateCreated != ''
-			response[0].dateUpdated != null && response[0].dateUpdated != ''
-			response[0].googleMapsPlaceId == null
-			response[0].isCustomAddress == true
-			response[0].location == null
-			response[0].name == venueParams.name
-			response[0].postcode == venueParams.postcode
-			response[0].user?.id == userHelper.getUserIdByToken(individualUserToken)
+			verifyCustomVenues(response)
+	}
+	
+	def "Get Custom Venue - By Part Postcode"() {
+		
+		given:'A venue is searched for by part of a postcode'
+			def postcode = customVenueParams.postcode[0..2]
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(postcode, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyCustomVenues(response)
+	}
+	
+	def "Get Custom Venue - By Street"() {
+		
+		given:'A venue is searched for by street'
+			def street = customVenueParams.street
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(street, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyCustomVenues(response)
+	}
+	
+	def "Get Custom Venue - By Area"() {
+		
+		given:'A venue is searched for by area'
+			def area = customVenueParams.area
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(area, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyCustomVenues(response)
+	}
+	
+	def "Get Custom Venue - By City"() {
+		
+		given:'A venue is searched for by city'
+			def city = customVenueParams.city
+					
+		when:'The search is performed'
+			def response = venueHelper.venueSearch(city, individualUserToken)
+		
+		then:'Nearby venues are correctly returned'
+			verifyCustomVenues(response)
+	}
+	
+	def verifyCustomVenues(response) {
+		assert response.size() == 1
+		assert response[0].id != null
+		assert response[0].address == customVenueParams.address
+		assert response[0].dateCreated != null && response[0].dateCreated != ''
+		assert response[0].dateUpdated != null && response[0].dateUpdated != ''
+		assert response[0].googleMapsPlaceId == null
+		assert response[0].isCustomAddress == true
+		assert response[0].location == null
+		assert response[0].name == customVenueParams.name
+		assert response[0].postcode == customVenueParams.postcode
+		assert response[0].user?.id == userHelper.getUserIdByToken(individualUserToken)
+		true
 	}
 }
