@@ -10,6 +10,7 @@ import pw.api.test.helpers.EventHelper
 import pw.api.test.helpers.PostHelper
 import pw.api.test.helpers.UserHelper
 import pw.api.test.helpers.VenueHelper
+import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.time.TimeCategory
@@ -114,7 +115,8 @@ abstract class BaseApiTest extends Specification {
 			def requestJson
 			if (requestContent) {
 				try {
-					requestJson = JsonOutput.prettyPrint(requestContent)
+					def parsedJson = new JsonSlurper().parseText(requestContent)
+					requestJson = new JsonBuilder(parsedJson).toPrettyString()
 				} catch (groovy.json.JsonException e) {
 					throw new Error("The following json request content could not be parsed:\n $requestContent")
 				}
@@ -131,13 +133,20 @@ abstract class BaseApiTest extends Specification {
 			//Execute request and get response
 			def responseContent = (responseCode == 200) ? content?.text : errorStream?.text
 			if (responseContent) {
+				def parseSuccessful = true
 				try {
 					responseJson = new JsonSlurper().parseText(responseContent)
+					responseJson << [responseCode:responseCode]
 				} catch (JsonException) {
 					responseJson = responseContent
+					parseSuccessful = false
 				}
 				if (printResponse) {
-					println JsonOutput.prettyPrint(responseContent)
+					if (parseSuccessful) {
+						println JsonOutput.prettyPrint(responseContent)
+					} else {
+						//println responseContent
+					}
 				}
 			} else {
 				throw new Exception("The $method request to $baseUrl$url failed with a response code of $responseCode")

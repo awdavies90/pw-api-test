@@ -27,7 +27,7 @@ class VenueHelper {
 	def saveVenue(Map params, String token) {
 		baseTest.authToken = token
 		def response = baseTest.post('venue/save', 'venue/SaveVenue', params)
-		if (response) {
+		if (response?.id) {
 			customVenueIds << response.id
 		}
 		response
