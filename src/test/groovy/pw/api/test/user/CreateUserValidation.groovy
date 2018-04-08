@@ -21,7 +21,7 @@ class CreateUserValidation extends BaseApiTest {
 			def response = userHelper.create(params)
 		
 		then:'An appropriate error response is received'
-			response.errors[0] == 'The following params are required [username, password, confirmPassword, email, role]'
+			response.errors[0] == 'The following params are required [username, password, confirmPassword, email, role].'
 		
 		where:'The following inputs are used'
 			username | password | confirmPassword | email		   | role

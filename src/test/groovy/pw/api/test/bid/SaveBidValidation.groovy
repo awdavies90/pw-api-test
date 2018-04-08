@@ -19,7 +19,7 @@ class SaveBidValidation extends BaseBidTest {
 			def response = bidHelper.saveBid(params, bandUserToken)
 		
 		then:'The test passes'
-			response.errors[0] == 'The following params are required [postId, amount, notes]'
+			response.errors[0] == 'The following params are required [postId, amount, notes].'
 		
 		where:
 			postId											| amount 								  | notes 				  | description

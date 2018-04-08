@@ -1,5 +1,4 @@
 {
-	{{#if id}}"id":"{{id}}",{{/if}}
 	{{#if name}}"name":"{{name}}",{{/if}}
 	{{#if address}}"address":"{{address}}",{{/if}}
 	{{#if postcode}}"postcode":"{{postcode}}"{{/if}}

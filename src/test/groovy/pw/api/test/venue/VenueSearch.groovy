@@ -9,12 +9,12 @@ class VenueSearch extends BaseVenueTest {
 	
 	@Shared
 	static customVenueParams = [
-		name:'My Custom Venue',
-		address:'Nowhere Street, Nowherarea, Nowherecity',
-		postcode:'VE1 2NU',
-		street:'Nowhere Street',
-		area:'Nowherarea',
-		city:'Nowherecity'
+		name:'My Custom Venue for Searching',
+		address:'Search Street, Searchton, Searchcity',
+		postcode:'ZZ1 2RC',
+		street:'Search Street',
+		area:'Searchton',
+		city:'Searchcity'
 	]
 	
 	def setupSpec() {
@@ -122,6 +122,7 @@ class VenueSearch extends BaseVenueTest {
 	}
 	
 	def verifyVenues(response) {
+		response.removeAll { it.responseCode }
 		assert response.size() > 0
 		assert response.every { it.id != null }
 		assert response.every { it.address != null && it.address != '' }
@@ -209,6 +210,7 @@ class VenueSearch extends BaseVenueTest {
 	}
 	
 	def verifyCustomVenues(response) {
+		response.removeAll { it.responseCode }
 		assert response.size() == 1
 		assert response[0].id != null
 		assert response[0].address == customVenueParams.address

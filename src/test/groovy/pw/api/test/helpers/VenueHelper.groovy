@@ -18,7 +18,9 @@ class VenueHelper {
 		def venues = baseTest.getCall("venue/search?address=${URLEncoder.encode(searchText, 'UTF-8')}")
 		if (venues) {
 			venues.each {
-				venueIds << it.id
+				if (it.id) {
+					venueIds << it.id
+				}
 			}
 		}
 		venues
@@ -33,19 +35,42 @@ class VenueHelper {
 		response
 	}
 	
+	def updateVenue(Map params, String token) {
+		baseTest.authToken = token
+		baseTest.post("venue/update/${params.id}", 'venue/SaveVenue', params)
+	}
+	
 	def getVenue(id, String token) {
 		baseTest.authToken = token
 		baseTest.getCall("venue/$id")
 	}
 	
 	int getRandomVenueId(String token) {
-		while (venueIds.size() == 0) {
+		getRandomVenueIdOrCustomVenueId(venueIds) {
 			def randomPostcode = getRandomPostcode()
 			venueSearch(randomPostcode, token)
 		}
+	}
+	
+	int getRandomCustomVenueId(String token) {
+		getRandomVenueIdOrCustomVenueId(customVenueIds) {
+			def randomPostcode = getRandomPostcode()
+			def params = [
+				name:"Custom Venue Name ${new Date()}",
+				address:"Custom Venue address ${new Date()}",
+				postcode:randomPostcode
+			]
+			saveVenue(params, token)
+		}
+	}
+	
+	private int getRandomVenueIdOrCustomVenueId(List<Integer> listOfIds, Closure action) {
+		while (listOfIds.size() == 0) {
+			action()
+		}
 		Random randomGenerator = new Random()
-		int randomNum = randomGenerator.nextInt(venueIds.size())
-		venueIds[randomNum]
+		int randomNum = randomGenerator.nextInt(listOfIds.size())
+		listOfIds[randomNum]
 	}
 	
 	def getRandomPostcode() {
@@ -55,7 +80,11 @@ class VenueHelper {
 	
 	def deleteVenue(id, String token) {
 		baseTest.authToken = token
-		baseTest.delete("venue/$id")
+		def response = baseTest.delete("venue/$id")
+		if (response.success) {
+			venueIds.removeIf { it == id }
+			customVenueIds.removeIf { it == id }
+		}
 	}
 	
 	def deleteVenue(id) {
@@ -63,7 +92,8 @@ class VenueHelper {
 	}
 	
 	def deleteAllCustomVenues() {
-		customVenueIds.each { venueId ->
+		List<Integer> venueIds = customVenueIds.collect { it }
+		venueIds.each { venueId ->
 			deleteVenue(venueId)
 		}
 		customVenueIds = []
