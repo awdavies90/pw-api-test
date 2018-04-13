@@ -154,4 +154,13 @@ abstract class BaseApiTest extends Specification {
 		}
 		responseJson
 	}
+	
+	//Helper methods
+	def whileWithLimit(int maxNumberOfTimesToExecute, Closure whileExpression, Closure action) {
+		def count = 0
+		while (whileExpression() && count < maxNumberOfTimesToExecute) {
+			action()
+			count++
+		}
+	}
 }

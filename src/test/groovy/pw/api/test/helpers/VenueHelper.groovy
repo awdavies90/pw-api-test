@@ -7,6 +7,7 @@ class VenueHelper {
 	
 	List<Integer> venueIds = []
 	List<Integer> customVenueIds = []
+	static venueWithPostcode
 	BaseApiTest baseTest
 	
 	def VenueHelper(BaseApiTest baseTest) {
@@ -18,7 +19,7 @@ class VenueHelper {
 		def venues = baseTest.getCall("venue/search?address=${URLEncoder.encode(searchText, 'UTF-8')}")
 		if (venues) {
 			venues.each {
-				if (it.id) {
+				if (it?.id && !it.name?.contains('&')) {
 					venueIds << it.id
 				}
 			}
@@ -47,8 +48,10 @@ class VenueHelper {
 	
 	int getRandomVenueId(String token) {
 		getRandomVenueIdOrCustomVenueId(venueIds) {
-			def randomPostcode = getRandomPostcode()
-			venueSearch(randomPostcode, token)
+			baseTest.whileWithLimit(5, { venueIds.size() == 0 }) {
+				def randomPostcode = getRandomPostcode()
+				venueSearch(randomPostcode, token)
+			}
 		}
 	}
 	
@@ -97,5 +100,24 @@ class VenueHelper {
 			deleteVenue(venueId)
 		}
 		customVenueIds = []
+	}
+	
+	def getRandomVenueWithPostcode() {
+		def existingVenueId = getRandomVenueId(baseTest.individualUserToken)
+		def existingVenue = venueWithPostcode
+		if (!existingVenue) {
+			existingVenue = getVenue(existingVenueId, baseTest.individualUserToken)
+		}
+		if (!existingVenue.postcode) {
+			def randomPostcode = getRandomPostcode()
+			def params = [
+				id:existingVenueId,
+				postcode:randomPostcode
+			]
+			existingVenue = updateVenue(params, baseTest.adminUserToken)
+		}
+		existingVenue?.name = existingVenue?.name?.replace('amp;','')
+		venueWithPostcode = existingVenue
+		existingVenue
 	}
 }

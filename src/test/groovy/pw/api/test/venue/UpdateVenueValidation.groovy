@@ -79,23 +79,68 @@ class UpdateVenueValidation extends BaseVenueTest {
 			response.errors[0] == 'You cannot update a non-custom venue.'
 	}
 	
-	@Ignore //TODO: Finish this test
-	def "Update Venue Validation - Venue With Same Name & Postcode Already Exists"() {
+	@IgnoreRest
+	def "Update Venue Validation - Venue With Same Name & Postcode Already Exists - System Venue"() {
 		
 		given:'A custom venue is to be updated'
-			def params = [
-				name:'New Custom Venue',
+			def existingVenue = venueHelper.getRandomVenueWithPostcode()
+			
+			def saveParams = [
+				name:"My Unique Venue",
 				address:'Nowhere Street, Nowherarea, Nowherecity',
-				postcode:'VE1 2NU'
+				postcode:'UN1 1QE'
+			]
+			def updateParams = [
+				name:existingVenue.name,
+				postcode:existingVenue.postcode
 			]
 					
-		when:'The venue is updated to have the same address as an existing venue'
-			venueHelper.saveVenue(params, individualUserToken)
-			def response = venueHelper.saveVenue(params, individualUserToken)
+		when:'The venue is updated with a venue name and postcode which matches an existing system venue'
+			def saveResponse = venueHelper.saveVenue(saveParams, individualUserToken)
+			updateParams.id = saveResponse.id
+			def response = venueHelper.updateVenue(updateParams, individualUserToken) 
 		
 		then:'An appropriate error response is received'
 			response.responseCode == 400
 			response.errors[0] == 'A venue already exists with the same name and postcode.'
+	}
+	
+	@Unroll
+	def "Update Venue Validation - Venue With Same Name & Postcode Already Exists - Custom Venue"() {
+		
+		setup:'A custom venue is to be updated'
+			def setupParams = [
+				name:'Duplicate Name',
+				address:'Duplicate Address',
+				postcode:'DU1 1PL'
+			]
+			def setupResponse = venueHelper.saveVenue(setupParams, individualUserToken)
+			
+		when:'The venue is updated with a venue name and postcode which matches an existing custom venue'
+			def params = [
+				id:setupResponse?.id,
+				name:name,
+				address:address,
+				postcode:postcode
+			]
+			def response = venueHelper.updateVenue(params, individualUserToken)
+		
+		then:'An appropriate error response is received'
+			response.responseCode == valid ? 200 : 400
+			response.errors?.getAt(0) == valid ? null : 'A venue already exists with the same name and postcode.'
+		
+		cleanup:
+			if (setupResponse.id)
+				venueHelper.deleteVenue(setupResponse.id)
+			if (response.id)
+				venueHelper.deleteVenue(response.id)
+			
+		where:'The following parameters are supplied'
+			name 			 | address 			   | postcode  | valid
+			'Duplicate Name' | 'Duplicate Address' | 'DU1 1PL' | false
+			'Duplicate Name' | 'Diff Address'	   | 'DU1 1PL' | false
+			'Diff Name' 	 | 'Duplicate Address' | 'DU1 1PL' | true
+			'Duplicate Name' | 'Duplicate Address' | 'AB1 1CD' | true
 	}
 	
 	//----------Permissions Tests----------//
