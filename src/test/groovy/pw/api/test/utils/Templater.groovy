@@ -6,7 +6,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 
 class Templater {
 
-	static String use(String templateName, Map params) {
+	static String use(String templateName, params) {
 		def returnValue
 		if (templateName && params) {
 			def loader = new ClassPathTemplateLoader();
@@ -15,7 +15,7 @@ class Templater {
 			def handlebars = new Handlebars(loader);
 			Template template = handlebars.compile(templateName);
 			def output = template.apply(params)
-			returnValue = output
+			returnValue = output.replace('amp;', '')
 		}
 		returnValue
 	}

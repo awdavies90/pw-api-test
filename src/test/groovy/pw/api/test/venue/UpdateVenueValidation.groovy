@@ -79,7 +79,6 @@ class UpdateVenueValidation extends BaseVenueTest {
 			response.errors[0] == 'You cannot update a non-custom venue.'
 	}
 	
-	@IgnoreRest
 	def "Update Venue Validation - Venue With Same Name & Postcode Already Exists - System Venue"() {
 		
 		given:'A custom venue is to be updated'

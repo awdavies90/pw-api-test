@@ -5,38 +5,39 @@ import pw.api.test.helpers.VenueHelper
 import pw.api.test.utils.Templater
 import spock.lang.*
 
-class SaveVenue extends BaseVenueTest {
+class UpdateVenue extends BaseVenueTest {
 	
 	@Unroll
 	def "Save Venue"() {
 		
 		given:'A valid custom venue is to be saved'
 			def params = [
+				id:venueHelper.getRandomCustomVenueId(individualUserToken),
 				name:name,
 				address:'Nowhere Street, Nowherarea, Nowherecity',
 				postcode:postcode
 			]
 					
 		when:'The venue is saved'
-			def saveResponse = venueHelper.saveVenue(params, individualUserToken)
-			def getVenueResponse = venueHelper.getVenue(saveResponse?.id, individualUserToken)
+			def updateResponse = venueHelper.updateVenue(params, individualUserToken)
+			def getVenueResponse = venueHelper.getVenue(updateResponse?.id, individualUserToken)
 		
 		then:'The venue is correctly saved'
-			saveResponse.id != null
-			saveResponse.address == params.address
-			saveResponse.dateCreated != null && saveResponse.dateCreated != ''
-			saveResponse.dateUpdated != null && saveResponse.dateUpdated != ''
-			saveResponse.googleMapsPlaceId == null
-			saveResponse.isCustomAddress == true
-			saveResponse.location == null
-			saveResponse.name == params.name
-			saveResponse.postcode == params.postcode.toUpperCase()
-			saveResponse.user?.id == userHelper.getUserIdByToken(individualUserToken)
+			updateResponse.id != null
+			updateResponse.address == params.address
+			updateResponse.dateCreated != null && updateResponse.dateCreated != ''
+			updateResponse.dateUpdated != null && updateResponse.dateUpdated != ''
+			updateResponse.googleMapsPlaceId == null
+			updateResponse.isCustomAddress == true
+			updateResponse.location == null
+			updateResponse.name == params.name
+			updateResponse.postcode == params.postcode.toUpperCase()
+			updateResponse.user?.id == userHelper.getUserIdByToken(individualUserToken)
 			
-			getVenueResponse.id == saveResponse.id
+			getVenueResponse.id == updateResponse.id
 			getVenueResponse.address == params.address
-			getVenueResponse.dateCreated != null && saveResponse.dateCreated != ''
-			getVenueResponse.dateUpdated != null && saveResponse.dateUpdated != ''
+			getVenueResponse.dateCreated != null && updateResponse.dateCreated != ''
+			getVenueResponse.dateUpdated != null && updateResponse.dateUpdated != ''
 			getVenueResponse.googleMapsPlaceId == null
 			getVenueResponse.isCustomAddress == true
 			getVenueResponse.location == null
