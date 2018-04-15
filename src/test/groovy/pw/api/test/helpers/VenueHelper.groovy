@@ -81,6 +81,10 @@ class VenueHelper {
 		response.result.postcode
 	}
 	
+	def deleteVenue(id) {
+		deleteVenue(id, baseTest.adminUserToken)
+	}
+	
 	def deleteVenue(id, String token) {
 		baseTest.authToken = token
 		def response = baseTest.delete("venue/$id")
@@ -88,10 +92,7 @@ class VenueHelper {
 			venueIds.removeIf { it == id }
 			customVenueIds.removeIf { it == id }
 		}
-	}
-	
-	def deleteVenue(id) {
-		deleteVenue(id, baseTest.adminUserToken)
+		response
 	}
 	
 	def deleteAllCustomVenues() {
@@ -116,7 +117,6 @@ class VenueHelper {
 			]
 			existingVenue = updateVenue(params, baseTest.adminUserToken)
 		}
-		existingVenue?.name = existingVenue?.name?.replace('amp;','')
 		venueWithPostcode = existingVenue
 		existingVenue
 	}
