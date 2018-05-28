@@ -4,7 +4,7 @@ import spock.lang.*
 import pw.api.test.BaseApiTest
 import pw.api.test.utils.RandomUtils
 
-class PostHelper {
+class PlaylistHelper {
 	
 	List<Integer> postIds = []
 	BaseApiTest baseTest

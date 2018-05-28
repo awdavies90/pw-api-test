@@ -1,7 +1,5 @@
 package pw.api.test.venue
 
-import java.util.concurrent.atomic.AtomicInteger
-
 import pw.api.test.BaseApiTest
 import pw.api.test.helpers.VenueHelper
 import spock.lang.*
@@ -45,6 +43,21 @@ class DeleteVenueValidation extends BaseVenueTest {
 		then:'An appropriate error response is received'
 			response.responseCode == 400
 			response.errors[0] == 'You cannot delete a system venue.'
+	}
+	
+	@IgnoreRest
+	def "Delete Venue Validation - Venue is Used by a Post"() {
+		
+		given:"A venue is to be deleted"
+			def post = postHelper.createRandomPost(individualUserToken, true)
+			def venueId = post.venue.id
+					
+		when:'The venue is used by a post'
+			def response = venueHelper.deleteVenue(venueId, individualUserToken)
+		
+		then:'An appropriate error response is received'
+			response.responseCode == 400
+			response.errors[0] == 'This venue cannot be deleted as it is selected for a post.'
 	}
 	
 	//----------Permissions Tests----------//

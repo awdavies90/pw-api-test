@@ -1,6 +1,10 @@
 {
-	"gigName":"{{name}}",
+	"name":"{{name}}",
 	"date":"{{date}}",
+	{{#if fromPrice}}"fromPrice":{{fromPrice}},{{/if}}
+	{{#if toPrice}}"toPrice":{{toPrice}},{{/if}}
+	{{#if description}}"description":"{{description}}",{{/if}}
+	{{#if venueDescription}}"venueDescription":"{{venueDescription}}",{{/if}}
 	"venue": {
 		{{#if venueId}}"id": {{venueId}}{{/if}}
 	}
