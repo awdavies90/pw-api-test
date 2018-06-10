@@ -36,4 +36,8 @@ class RandomUtils {
 		}
 		text[0..(numberOfCharacters - 1)]
 	}
+	
+	static boolean trueOrFalse() {
+		random.nextBoolean()
+	}
 }

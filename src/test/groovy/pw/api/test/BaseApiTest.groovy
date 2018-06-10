@@ -8,6 +8,7 @@ import javax.xml.ws.http.HTTPException
 import pw.api.test.helpers.BidHelper
 import pw.api.test.helpers.EventHelper
 import pw.api.test.helpers.PostHelper
+import pw.api.test.helpers.TrackHelper
 import pw.api.test.helpers.UserHelper
 import pw.api.test.helpers.VenueHelper
 import groovy.json.JsonBuilder
@@ -41,6 +42,7 @@ abstract class BaseApiTest extends Specification {
 	@Shared static UserHelper userHelper
 	@Shared static VenueHelper venueHelper
 	@Shared static PostHelper postHelper
+	@Shared static TrackHelper trackHelper
 	
 	def setupSpec() {
 		bidHelper = new BidHelper(this)
@@ -48,6 +50,7 @@ abstract class BaseApiTest extends Specification {
 		userHelper = new UserHelper(this)
 		venueHelper = new VenueHelper(this)
 		postHelper = new PostHelper(this)
+		trackHelper = new TrackHelper(this)
 		
 		adminUserToken = userHelper.getUserToken('admin', 'pass1234')
 		individualUserToken = userHelper.getUserToken('davo123', 'pass1234')
